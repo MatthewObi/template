@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Read the Docs Template's documentation!
+Welcome to Saturn's documentation!
 ==================================================
+
+Hello, stranger. This documentation is (obviously) unfinished. Please bear this in mind when reading. 
 
 Contents:
 

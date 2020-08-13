@@ -1,41 +1,39 @@
-Template
-========
+About this language
+===================
 
-$project will solve your problem of where to start with documentation,
-by providing a basic explanation of how to do it easily.
+Saturnlang is a new programming language developed as a personal exercise. It is currently far from being feature
+rich, or being useful. However, there are plans to add features that could prove useful to developers. One such
+feature is making webasm projects easier to make. 
 
-Look how easy it is to use:
+Here is the "Hello, world!" program, written in Saturn::
 
-    import project
-    # Get your stuff done
-    project.do_stuff()
+    package main;
+
+    fn main(): int {
+        printf("Hello, world!\n");
+        return 0;
+    }
 
 Features
 --------
 
-- Be awesome
-- Make things faster
-
-Installation
-------------
-
-Install $project by running:
-
-    install project
+- Memory management which is easier to deal with compared to C/C++.
+- Clean syntax, but familiar to C/C++ programmers.
+- Easier to develop webasm programs (Future plan).
 
 Contribute
 ----------
 
-- Issue Tracker: github.com/$project/$project/issues
-- Source Code: github.com/$project/$project
+- Issue Tracker: github.com/MatthewObi/saturnlang/issues
+- Source Code: github.com/MatthewObi/saturnlang
 
 Support
 -------
 
-If you are having issues, please let us know.
-We have a mailing list located at: project@google-groups.com
+I currently do not have an email list at the moment. 
+If you have an issues, you can navigate to the github page.
 
 License
 -------
 
-The project is licensed under the BSD license.
+The project is licensed under the MIT license.
