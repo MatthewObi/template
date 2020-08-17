@@ -81,4 +81,81 @@ Here is a table describing which suffixes are needed for what types.
    * - ``uint64``
      - ``0ul``
 
+Assignment
+----------
+
+You can assign new values to variables, like so::
+
+    x := 2;
+    printf("x = %d\n", x);
+    x = 45;
+    printf("x = %d\n", x);
+
+The output of this code will be::
+
+    x = 2
+    x = 45
+
+.. note:: 
+    
+    You cannot assign new values to ``const`` variables. ``const`` will be discussed in a future section.
+
+Expressions
+-----------
+
+The following table shows what expressions are valid in Saturn programs:
+
+.. list-table:: Expression Types
+   :widths: 35 128
+   :header-rows: 1
+
+   * - Type
+     - Description
+   * - ``a + b``
+     - Returns the addition of ``a`` and ``b``.
+   * - ``a - b``
+     - Returns the subtraction of ``a`` and ``b``.
+   * - ``a * b``
+     - Returns the product of ``a`` and ``b``.
+   * - ``a / b``
+     - Returns the division of ``a`` and ``b``.
+   * - ``a % b``
+     - Returns the remainder of ``a`` and ``b``.
+   * - ``a & b``
+     - Returns the bitwise and of ``a`` and ``b``.
+   * - ``a | b``
+     - Returns the bitwise or of ``a`` and ``b``.
+   * - ``a ^ b``
+     - Returns the bitwise xor of ``a`` and ``b``.
+   * - ``~a``
+     - Returns the bitwise not of ``a``.
+   * - ``&a``
+     - Returns the address of ``a``, where ``a`` is a variable.
+   * - ``*a``
+     - Returns the dereferenced value located at ``a``, where ``a`` is a or evaluates to a pointer variable.
+   * - ``a && b``
+     - Returns the boolean and of ``a`` and ``b``, where ``a`` and ``b`` are truth values. Uses short-circuit evaluation.
+   * - ``a || b``
+     - Returns the boolean or of ``a`` and ``b``, where ``a`` and ``b`` are truth values. Uses short-circuit evaluation.
+   * - ``!a``
+     - Returns the boolean not of ``a``, where ``a`` is a truth value.
+   * - ``a[b]``
+     - Returns the bth element located at ``a``, where ``a`` is an array or collection variable and ``b`` is an index value.
+
+Calling Functions
+-----------------
+
+You can call functions in Saturn like so::
+
+    <name> ( <arg1>, <arg2>, ... );
+
+Here are some more examples of calling functions, assuming we created a factorial function:
+
+.. code-block:: C
+
+    printf("%d\n", 5); //Prints 5
+    x := factorial(5); //Computes factorial of 5 and puts the value into x
+    printf("%d\n", factorial(3)); //Computes factorial of 3 
+    //and prints the value
+
 To be continued...
