@@ -158,4 +158,40 @@ Here are some more examples of calling functions, assuming we created a factoria
     printf("%d\n", factorial(3)); //Computes factorial of 3 
     //and prints the value
 
+Defining new functions
+----------------------
+
+In Saturn, you can define your own functions which you can call in your own code. To define a function, use this syntax::
+
+    fn <name> ( <arg1name>: <arg1type>, <arg2name>: <arg2type>, ... ): <returntype> {
+        <body>
+    }
+
+``<name>`` can be any identifier, meaning any combination of alphanumeric characters and underscore, as long as the
+name starts with a letter or an underscore.
+
+``<returntype>`` can be ommitted if the function does not return a value. You can also put ``void`` in this case as
+well.
+
+Here's a quick concrete example::
+
+    fn square(x: int): int {
+        return x * x;
+    }
+
+As you can see, we define a new function with the name ``square``. It has one argument named ``x`` and given a type
+of ``int``. The body of the function consists of one statement, which returns the value of ``x * x``.
+
+We can use this function in our code as such::
+
+    fn main(): int {
+        x := square(7);
+        printf("%d\n", x);
+        return 0;
+    }
+
+The console should print out the following::
+
+    49
+
 To be continued...
