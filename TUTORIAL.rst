@@ -194,4 +194,117 @@ The console should print out the following::
 
     49
 
+If
+--
+
+Like most programming languages, Saturn has ``if`` statements. They are as so::
+
+    if <boolean-expr> {
+        <body>
+    }
+
+``boolean-expr`` is any expression that results in a boolean value (true or false). This is either a variable that is a 
+boolean type or a comparison expression.
+
+In the code below, we only execute the assignment if the expression ``x < 0`` is true.
+::
+
+    if x < 0 {
+        x = 0;
+    }
+
+The above example has just one statement inside the body, so we can condense it like so::
+
+    if x < 0 then x = 0;
+
+We can pair our ``if`` statement with an ``else`` statement.
+
+While
+-----
+
+Just like ``if`` statements, ``while`` statements consist of a boolean expression and a body. The difference is, 
+``while`` statements will continue executing as long as the boolean expression evaluates to true.
+::
+
+    while <boolean-expr> {
+        <body>
+    }
+
+In the code below, we will execute the ``printf`` function as long as ``x > 0`` is true.
+
+.. code-block:: C
+
+    x := 5;
+    while x > 0 {
+        printf("%d\n", x); //Prints the value of x.
+        x -= 1; //Decrements x
+    }
+
+This code should print out::
+
+    5
+    4
+    3
+    2
+    1
+
+Just like with ``if`` statements, ``while`` statements can be condensed onto one line, this time with the keyword ``do``::
+
+    while x != VALUE_SUCCESS do x = check_value();
+
+.. note:: 
+    
+    You should be careful when doing this as there aren't many instances where a while loop will be one statement, and
+    it can be very easy to accidentally create an infinite loop this way.
+
+For
+---
+
+Just like ``while`` statements, ``for`` statements are loops that contain a body. They defer greatly however as they
+also create a variable and use an "iterator_expression" to determine the range of values the variable should go over.
+::
+
+    for <variable> in <iterator_expression> {
+        <body>
+    }
+
+For ``<variable>`` you do not need to provide the type, just the name, as you would with ``:=``. 
+
+The iterator_expression is defined as follows:
+::
+
+    <begin>..<end>
+    <begin>..<end>:<step>
+
+The range is exclusive. If you wish to use an inclusive range, you will need to use the syntax below:
+::
+
+    <begin>...<end>
+    <begin>...<end>:<step>
+
+If step is not defined, it will default to ``1``.
+
+In the below example, we create a variable ``a`` which counts from 0 to 5::
+
+    for a in 0..5 {
+        printf("%d\n", a);
+    }
+
+The above prints out::
+
+    0
+    1
+    2
+    3
+    4
+
+Just like with the ``while`` statement, we can condense a for statement onto one line with ``do``.
+
+::
+
+    for a in 0..5 do printf("%d\n", a);
+
+Currently this is the only version of the ``for`` loop that is available. In the future, I will have a version that
+can iterate over a collection like an array, map, or other collection.
+
 To be continued...
