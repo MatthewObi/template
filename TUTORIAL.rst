@@ -273,20 +273,20 @@ For ``<variable>`` you do not need to provide the type, just the name, as you wo
 The iterator_expression is defined as follows:
 ::
 
-    <begin>..<end>
-    <begin>..<end>:<step>
+    [<begin>..<end>]
+    [<begin>..<end>:<step>]
 
 The range is exclusive. If you wish to use an inclusive range, you will need to use the syntax below:
 ::
 
-    <begin>...<end>
-    <begin>...<end>:<step>
+    [<begin>...<end>]
+    [<begin>...<end>:<step>]
 
 If step is not defined, it will default to ``1``.
 
 In the below example, we create a variable ``a`` which counts from 0 to 5::
 
-    for a in 0..5 {
+    for a in [0..5] {
         printf("%d\n", a);
     }
 
@@ -302,9 +302,135 @@ Just like with the ``while`` statement, we can condense a for statement onto one
 
 ::
 
-    for a in 0..5 do printf("%d\n", a);
+    for a in [0..5] do printf("%d\n", a);
 
 Currently this is the only version of the ``for`` loop that is available. In the future, I will have a version that
 can iterate over a collection like an array, map, or other collection.
+
+Pointers
+--------
+
+Pointers are variables that hold the address of another variable. They allow the programmer to reference other 
+variables in their code.
+
+Pointers are defined so:
+::
+
+    <name>: *<pointee-type>;
+
+You can get the address of a variable using ``&<variable>``. 
+::
+
+    i: int = 5;
+    iptr: *int = &i; //iptr now 'points' to i
+
+    printf("%X", iptr); // Prints the address of i
+
+Addresses assigned to variables are usually random, so you should not try to expect that variables will have 
+specific addresses.
+
+You can grab the value at the specified address by using the dereference operator:
+::
+
+    iptr: *int = &i; //iptr now 'points' to i
+    j := *iptr; // dereference iptr and set j to that value.
+    printf(if i == j then "true" else "false"); // Prints true
+
+Be careful, though. Pointers are quite dangerous and if the address in a pointer is not valid, you could create 
+all kinds of nasty bugs. For instance, the program will crash if you try to dereference the address ``0`` AKA 
+``null``.
+::
+
+    iptr: *int = null; //iptr holds the dangerous address 0.
+    j := *iptr; // CRASH!
+
+You can mitigate this by checking for null before dereferencing a pointer.
+::
+
+    iptr: *int = null;
+    if iptr != null {
+      j := *iptr; // We know the pointer isn't null, so we can dereference.
+    }
+
+Defining your own types
+-----------------------
+
+Using built-in types is all fine and good, but what about creating your own data types?
+There is indeed a way in saturn to create your own data types.
+
+::
+
+    type <name>: <underlying-type>;
+
+The above creates a type named ``name``. If  ``<underlying-type>`` is a predefined type, you have just created
+a type alias. The code below creates an alias of float64 with the name ``number``.
+
+.. code-block:: C
+
+    type number: float64;
+    ...
+    myNum: number = 0.4; //Works just like "myNum: float64 = 0.4;"
+
+
+Structs 
+-------
+
+::
+
+    type <name>: struct {
+      <fieldname>: <fieldtype>;
+      ...
+    };
+
+The above syntax creates a ``struct`` with the name ``<name>``. Just like 
+structs in C/C++, structs in Saturn are aggregate data types that contain a number of fields, which can be any 
+other defined data type.
+
+.. code-block:: C
+
+    type Vector2: struct {
+      x: int;
+      y: int;
+    };
+
+In the above code, we create a struct called ``Vector2``, which holds two data fields (``x`` and ``y``), which are 
+both of the type ``int``.
+
+To use structs in our code, we simply declare them as the type of a variable:
+::
+
+    myVec2: Vector2;
+
+We can also initialize them using ``:=`` and the struct initialization syntax:
+::
+
+    myVec2 := Vector2 {x: 0, y: 10};
+
+We can access the fields of the struct using the ``.`` operator, like so:
+
+.. code-block:: C
+
+    myVec2.x = 4; //We access the x field of myVec2 and set it to 4.
+    i : int = myVec2.x; //We declare a variable i and set its value to the value of myVec2.x
+
+The ``.`` also works on pointers to structs, automatically dereferencing the pointer:
+
+.. code-block:: C
+
+    myVec2ptr: *Vector2 = &myVec2;
+    j := myVec2ptr.x; //Works. Compiler will automatically dereference myVec2ptr.
+
+Methods
+-------
+
+There are some functions that have a strong association with a struct.
+
+The syntax for defining a method is similar to defining a function:
+
+.. code-block:: C
+
+    fn(*<structname>) <methodname>(<arg1name>: <arg1type>, <arg2name>: <arg2type>, ...): <returntype> {
+      <body>
+    }
 
 To be continued...

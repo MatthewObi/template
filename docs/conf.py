@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Saturn Language'
-copyright = u'2020, Matthew Obi'
+copyright = u'2022, Matthew Obi'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
