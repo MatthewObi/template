@@ -18,7 +18,7 @@ library. In the future, a normal ``print`` function will be made that will be mo
 to C's ``printf``. But until this happens, ``printf`` will have to be used.
 
 Our starting point is a function called ``main``. We also must declare our package as being ``main``, otherwise 
-it won't work. Packages will be explained in greater detail in another section (to be continued...).
+it won't work. Packages will be explained in greater detail in another section.
 
 Our ``main`` function returns an ``int``, which in this case is ``0``. Just like in C, this value represents the
 error code of the program, with ``0`` representing no error.
@@ -141,6 +141,8 @@ The following table shows what expressions are valid in Saturn programs:
      - Returns the boolean not of ``a``, where ``a`` is a truth value.
    * - ``a[b]``
      - Returns the bth element located at ``a``, where ``a`` is an array or collection variable and ``b`` is an index value.
+   * - ``a.b``
+     - Returns the field with the name ``b`` located in struct ``a``. If ``a`` is a tuple, ``b`` is the integer index of the element.
 
 Calling Functions
 -----------------
@@ -273,20 +275,20 @@ For ``<variable>`` you do not need to provide the type, just the name, as you wo
 The iterator_expression is defined as follows:
 ::
 
-    [<begin>..<end>]
-    [<begin>..<end>:<step>]
+    <begin>..<end>
+    <begin>..<end>:<step>
 
 The range is exclusive. If you wish to use an inclusive range, you will need to use the syntax below:
 ::
 
-    [<begin>...<end>]
-    [<begin>...<end>:<step>]
+    <begin>...<end>
+    <begin>...<end>:<step>
 
 If step is not defined, it will default to ``1``.
 
 In the below example, we create a variable ``a`` which counts from 0 to 5::
 
-    for a in [0..5] {
+    for a in 0..5 {
         printf("%d\n", a);
     }
 
@@ -302,7 +304,7 @@ Just like with the ``while`` statement, we can condense a for statement onto one
 
 ::
 
-    for a in [0..5] do printf("%d\n", a);
+    for a in 0..5 do printf("%d\n", a);
 
 Currently this is the only version of the ``for`` loop that is available. In the future, I will have a version that
 can iterate over a collection like an array, map, or other collection.
@@ -423,7 +425,9 @@ The ``.`` also works on pointers to structs, automatically dereferencing the poi
 Methods
 -------
 
-There are some functions that have a strong association with a struct.
+There are some functions that have a strong association with a struct. These functions 
+are referred to as methods. Methods are special functions which implicitly take a pointer 
+to a struct as the first argument (called 'this'). 
 
 The syntax for defining a method is similar to defining a function:
 
@@ -432,5 +436,110 @@ The syntax for defining a method is similar to defining a function:
     fn(*<structname>) <methodname>(<arg1name>: <arg1type>, <arg2name>: <arg2type>, ...): <returntype> {
       <body>
     }
+
+In the following example we define a method for the Vector2 struct.
+
+.. code-block:: C
+
+    fn(*Vector2) getX(): int {
+      return this.x; //'this' is a pointer to the struct.
+    }
+
+You can call methods by invoking them on a struct like so:
+
+.. code-block:: C
+
+    myVec2: Vector2;
+    x := myVec2.getX(); //We call the 'getX' method on the Vector2 struct. myVec2 is passed to
+                        //'this' as a pointer.
+
+Modules & Packages
+------------------
+
+Code is organized into seperate units of compilation. These units are referred to as modules. A 
+module has a list of symbols with are defined in it. 
+
+A package is a defined collection of modules which can be processed into a library or a runnable program.
+
+In C and older versions of C++ prior to C++20, header files were used to shared definitions across compilation 
+units. This is a tedious process and was very easy to screw up with duplicated definitions and circular includes. 
+Saturn uses a different approach.
+
+During compilation, when each module is parsed, a symbols.json file is created which contains all the definitions 
+of a single package. This file is used to generate definitions for when a module needs to reference a particular 
+external symbol.
+
+Importing Packages
+------------------
+
+By default, all non-private symbols in the same package are accessable. If you wish to use symbols from another 
+package, you must import that package first. This is done like so:
+
+.. code-block:: C
+
+    import <name-of-package>;
+    import <other-package>::<sub-package>;
+
+To use the package's symbols, we prefix its symbols with ``<name-of-package>::``
+
+.. code-block:: C
+
+    import cool_stuff;
+    cool_stuff::cool_function();
+    myVar: cool_stuff::cool_type; 
+
+If the package we've imported was a subpackage, we only need to prefix with the subpackage's name.
+
+.. code-block:: C
+
+    import cool_stuff::js_stuff;
+    js_stuff::do_js_thing();
+
+We can also import specific symbols from a particular package.
+
+.. code-block:: C
+
+    import do_web_stuff::{cool_function, cool_type};
+    // When we import specific symbols, we can use those symbols directly.
+    cool_function();
+    myVar: cool_type; 
+
+Visibility
+----------
+
+Symbols can be given a visibility. There are three visibility modes: public (``pub``), default, and private (``priv``).
+
+Private symbols are symbols which can only be seen by the module they were defined in. They are not exported to 
+the symbols.json.
+
+Default symbols can be seen by other symbols within the same package and are exported to symbols.json, but 
+cannot be imported by other packages.
+
+Public symbols are the same as default symbols, except that they can be imported by other packages.
+
+All symbols by default have default visibility. You can change the visibility of a symbol by prefixing its definition 
+with the keywords ``pub`` or ``priv``.
+
+.. code-block:: C
+
+    package great_package;
+    //This function cannot be seen outside of the current module.
+    priv fn very_private_function(): int { 
+      return 7;
+    }
+
+    //This function can be imported from other packages.
+    pub fn please_use_this_function(): int {
+      return very_private_function() + 1;
+    }
+
+    // Inside a different package...
+    import great_package::{very_private_function}; //Oops! Can't import that function.
+    import great_package::{please_use_this_function}; //...but we can import this one!
+
+    fn important_function() {
+      printf("%d", please_use_this_function()); //Works as expected.
+    }
+
 
 To be continued...
